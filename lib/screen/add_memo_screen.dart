@@ -38,7 +38,6 @@ class _AddMemoScreenState extends State<AddMemoScreen> {
                 String memoContent = _textEditingController.text.trim();
                 if (memoContent.isNotEmpty) {
                   Navigator.pop(context, memoContent);
-                  Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('메모 내용을 입력해주세요.')),
