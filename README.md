@@ -12,16 +12,6 @@
 ## 스크린샷
 앱의 주요 화면 스크린샷입니다:
 
-<style>
-  table {
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
-  th, td {
-    border: 1px solid black;
-  }
-</style>
-
 | **홈(빈화면)** | **메모 추가** | **홈(리스트 추가)** | **메모 상세** | **삭제 팝업** |
 |:-------:|:-------:|:-------:|:-------:|:-------:|
-| ![홈 화면(빈화면)](image/screenshot1.png) | ![메모 추가 화면](image/screenshot2.png) | ![홈 화면](image/screenshot3.png) | ![메모 상세 화면](image/screenshot4.png) | ![메모 삭제 팝업 화면](image/screenshot5.png) |
+| ![홈 화면(빈화면)](image/Screenshot1.png) | ![메모 추가 화면](image/Screenshot2.png) | ![홈 화면](image/Screenshot3.png) | ![메모 상세 화면](image/Screenshot4.png) | ![메모 삭제 팝업 화면](image/Screenshot5.png) |
