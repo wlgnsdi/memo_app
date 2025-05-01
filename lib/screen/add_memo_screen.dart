@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:memo_app/data/local/database_helper.dart';
+import 'package:memo_app/models/memo.dart';
 
 class AddMemoScreen extends StatefulWidget {
   const AddMemoScreen({super.key});
@@ -34,10 +36,15 @@ class _AddMemoScreenState extends State<AddMemoScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 String memoContent = _textEditingController.text.trim();
                 if (memoContent.isNotEmpty) {
-                  Navigator.pop(context, memoContent);
+                  Memo memo = Memo(
+                    content: memoContent,
+                    createdAt: DateTime.now(),
+                  );
+                  DatabaseHelper().insertMemo(memo);
+                  Navigator.pop(context, memo);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('메모 내용을 입력해주세요.')),

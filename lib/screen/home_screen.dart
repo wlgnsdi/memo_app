@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:memo_app/model/memo.dart';
+import 'package:memo_app/data/local/database_helper.dart';
+import 'package:memo_app/models/memo.dart';
 import 'package:memo_app/screen/add_memo_screen.dart';
 import 'package:memo_app/screen/memo_detail_screen.dart';
 
@@ -14,17 +15,28 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Memo> _memos = [];
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      var list = await DatabaseHelper().getMemos();
+      setState(() {
+        _memos.addAll(list);
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Memo')),
-      // body: _memoList(),
       body: ListView.builder(
         itemCount: _memos.length,
         itemBuilder: (context, index) {
           final memo = _memos[index];
 
           return GestureDetector(
-            onTap: () {
+            onTap: () async {
               memoDetail(index);
             },
             child: Container(
@@ -48,16 +60,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          var newMemoContent = await Navigator.push(
+          var newMemo = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddMemoScreen()),
           );
 
-          if (newMemoContent is String && newMemoContent.isNotEmpty) {
+          if (newMemo is Memo) {
             setState(() {
-              _memos.add(
-                Memo(content: newMemoContent, createdAt: DateTime.now()),
-              );
+              _memos.add(newMemo);
             });
           }
         },
@@ -84,10 +94,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       flex: 1,
                       child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _memos.removeAt(index);
-                          });
+                        onPressed: () async {
+                          int isDeleted = await DatabaseHelper().deleteMemo(
+                            _memos[index].id!,
+                          );
+                          if (isDeleted > 0) {
+                            setState(() {
+                              _memos.removeAt(index);
+                            });
+                          }
                           Navigator.pop(context);
                         },
                         child: Text('예'),
@@ -110,12 +125,18 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void memoDetail(int index) {
-    Navigator.push(
+  void memoDetail(int index) async {
+    var memo = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => MemoDetailScreen(memo: _memos[index]),
       ),
     );
+
+    if (memo is Memo) {
+      setState(() {
+        _memos[index] = memo;
+      });
+    }
   }
 }
